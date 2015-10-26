@@ -5,9 +5,13 @@ It uses Google Cloud Endpoints.
 
 
 import endpoints
-from protorpc import messages
 from protorpc import message_types
+from protorpc import messages
 from protorpc import remote
+
+import logging
+import base64
+import json
 
 from models import GreetingModel
 
@@ -16,15 +20,16 @@ from models import GreetingModel
 WEB_CLIENT_ID = 'secret'
 package = 'Hello'
 
-
 class Greeting(messages.Message):
     """Greeting that stores a message."""
     message = messages.StringField(1)
 
-
 class GreetingCollection(messages.Message):
     """Collection of Greetings."""
     items = messages.MessageField(Greeting, 1, repeated=True)
+
+class JWTMessage(messages.Message):
+    message = messages.StringField(1)
 
 
 @endpoints.api(name='helloworld', version='v1',
@@ -64,13 +69,23 @@ class HelloWorldApi(remote.Service):
                       path='hellogreeting/authed', http_method='POST',
                       name='greetings.authed')
     def greeting_authed(self, request):
-        current_user = endpoints.get_current_user()
-        email = (current_user.email() if current_user is not None
-                 else 'Anonymous')
-        new_greeting = GreetingModel(message='hello %s, you wrote "%s"!' % (email, request.message))
+        # Get the HTTP Authorization header.
+        auth_header = self.request_state.headers.get('authorization')
+        if not auth_header:
+            logging.info("No authorization header.")
+            new_greeting = GreetingModel(message='hello Anon, you wrote "%s"!' % (request.message))
+        else:
+            auth_token = auth_header.split(' ')[1].split('.')
+            print auth_token[1]
+            encoded_payload = json.loads(base64.b64decode(auth_token[1]))
+            if encoded_payload["name"] == "John Doe":
+                new_greeting = GreetingModel(message='hello John, you wrote "%s"!' % (request.message))
+            else:
+                new_greeting = GreetingModel(message='hello Anon, you wrote "%s" using auth header but invalid credentials!' % (request.message))
         new_greeting.put()
         greeting_message = Greeting(message=new_greeting.message)
         return greeting_message
+
 
 
 APPLICATION = endpoints.api_server([HelloWorldApi])
