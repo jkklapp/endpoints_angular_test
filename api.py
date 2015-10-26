@@ -13,10 +13,6 @@ from protorpc import remote
 # TODO: Replace the following lines with client IDs obtained from the APIs
 # Console or Cloud Console.
 WEB_CLIENT_ID = 'replace this with your web client application ID'
-ANDROID_CLIENT_ID = 'replace this with your Android client ID'
-IOS_CLIENT_ID = 'replace this with your iOS client ID'
-ANDROID_AUDIENCE = WEB_CLIENT_ID
-
 
 package = 'Hello'
 
@@ -38,9 +34,9 @@ STORED_GREETINGS = GreetingCollection(items=[
 
 
 @endpoints.api(name='helloworld', version='v1',
-               allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID,
-                                   IOS_CLIENT_ID],
-               audiences=[ANDROID_AUDIENCE])
+               allowed_client_ids=[WEB_CLIENT_ID
+                                   ],
+               audiences=[WEB_CLIENT_ID])
 class HelloWorldApi(remote.Service):
     """Helloworld API v1."""
 
