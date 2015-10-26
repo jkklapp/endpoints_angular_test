@@ -9,6 +9,7 @@ from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
 
+from models import GreetingModel
 
 # TODO: Replace the following lines with client IDs obtained from the APIs
 # Console or Cloud Console.
@@ -27,12 +28,6 @@ class GreetingCollection(messages.Message):
     items = messages.MessageField(Greeting, 1, repeated=True)
 
 
-STORED_GREETINGS = GreetingCollection(items=[
-    Greeting(message='hello world!'),
-    Greeting(message='goodbye world!'),
-])
-
-
 @endpoints.api(name='helloworld', version='v1',
                allowed_client_ids=[WEB_CLIENT_ID
                                    ],
@@ -44,7 +39,9 @@ class HelloWorldApi(remote.Service):
                       path='hellogreeting', http_method='GET',
                       name='greetings.listGreeting')
     def greetings_list(self, unused_request):
-        return STORED_GREETINGS
+        messages = [Greeting(message=m.message) for m in GreetingModel.all()]
+        greetings = GreetingCollection(items=messages)
+        return greetings
 
     ID_RESOURCE = endpoints.ResourceContainer(
             message_types.VoidMessage,
@@ -55,7 +52,8 @@ class HelloWorldApi(remote.Service):
                       name='greetings.getGreeting')
     def greeting_get(self, request):
         try:
-            return STORED_GREETINGS.items[request.id]
+            greeting_model = GreetingModel.get_by_id(request.id)
+            return Greeting(message=greeting_model.message)
         except (IndexError, TypeError):
             raise endpoints.NotFoundException('Greeting %s not found.' %
                                               (request.id,))
@@ -71,9 +69,10 @@ class HelloWorldApi(remote.Service):
         current_user = endpoints.get_current_user()
         email = (current_user.email() if current_user is not None
                  else 'Anonymous')
-        new_greeting = Greeting(message='hello %s, you wrote "%s"!' % (email, request.message))
-        STORED_GREETINGS.items.append(new_greeting)
-        return new_greeting
+        new_greeting = GreetingModel(message='hello %s, you wrote "%s"!' % (email, request.message))
+        new_greeting.put()
+        greeting_message = Greeting(message=new_greeting.message)
+        return greeting_message
 
 
 APPLICATION = endpoints.api_server([HelloWorldApi])
