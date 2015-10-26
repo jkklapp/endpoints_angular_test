@@ -73,15 +73,12 @@ class HelloWorldApi(remote.Service):
         auth_header = self.request_state.headers.get('authorization')
         if not auth_header:
             logging.info("No authorization header.")
-            new_greeting = GreetingModel(message='hello Anon, you wrote "%s"!' % (request.message))
         else:
             auth_token = auth_header.split(' ')[1].split('.')
-            print auth_token[1]
             encoded_payload = json.loads(base64.b64decode(auth_token[1]))
-            if encoded_payload["name"] == "John Doe":
-                new_greeting = GreetingModel(message='hello John, you wrote "%s"!' % (request.message))
-            else:
-                new_greeting = GreetingModel(message='hello Anon, you wrote "%s" using auth header but invalid credentials!' % (request.message))
+            message = encoded_payload["message"]
+            name = encoded_payload["name"]
+            new_greeting = GreetingModel(message='hello %s, you wrote "%s"!' % (name, message))
         new_greeting.put()
         greeting_message = Greeting(message=new_greeting.message)
         return greeting_message

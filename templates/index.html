@@ -1,8 +1,11 @@
 <!doctype html>
 <html ng-app="testapp">
   <head>
+    <script src="https://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/hmac-sha256.js"></script>
+    <script src="https://crypto-js.googlecode.com/svn/tags/3.0.2/build/components/enc-base64-min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
     <script src="/js/app.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/bootstrap/css/style.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
@@ -13,6 +16,7 @@
       <input class="btn" type="submit" value="Sign in">
     </div>
     <div class="main-container" ng-controller="GreetingsController as greetingsCtrl">
+      <span class="instructions">Enter a greeting and your name.</span>
       <ul class="unstyled greetings">
         <li ng-repeat="greeting in greetingsCtrl.greetings">
           <div>{{greeting.message}}</div>
@@ -20,9 +24,10 @@
       </ul>
       <form name="form" novalidate>
         <input type="text" ng-model="greetingsCtrl.message"  size="30"
-               placeholder="Write your greeting here" required>
-        <input class="btn-primary" type="submit" value="Greet" ng-click="form.$valid && greetingsCtrl.addAnonGreeting()">
-        <input class="btn-primary" type="submit" value="Say hi as John" ng-click="form.$valid && greetingsCtrl.addAuthedGreeting()">
+               placeholder="Your greeting..." required>
+        <input type="text" ng-model="greetingsCtrl.author"  size="30"
+               placeholder="Your name..." required>
+        <input class="btn-primary" type="submit" value="Say hi" ng-click="form.$valid && greetingsCtrl.addAuthedGreeting()">
       </form>
     </div>
   </body>
