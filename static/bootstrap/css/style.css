@@ -1,0 +1,46 @@
+.main-container {
+  margin: 200px auto;
+  width: 600px;
+}
+
+.title {
+  font-size: 33px;
+  margin-right: auto;
+}
+
+form {
+  margin: 0px !important;
+}
+
+.btn-primary {
+  margin-bottom: 10px;
+}
+
+.greetings {
+  background-color: #dadada;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.ng-dirty.ng-valid {
+  border-color: green;
+}
+
+.ng-dirty.ng-invalid {
+  border-color: red;
+}
+
+.header-container {
+  display: flex;
+}
+
+.header {
+  display: flex;
+  background-color: black;
+  color: white;
+  padding: 20px;
+}
+
+.header.btn {
+  float: right;
+}

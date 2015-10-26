@@ -13,8 +13,7 @@ from models import GreetingModel
 
 # TODO: Replace the following lines with client IDs obtained from the APIs
 # Console or Cloud Console.
-WEB_CLIENT_ID = 'replace this with your web client application ID'
-
+WEB_CLIENT_ID = 'secret'
 package = 'Hello'
 
 
@@ -29,8 +28,7 @@ class GreetingCollection(messages.Message):
 
 
 @endpoints.api(name='helloworld', version='v1',
-               allowed_client_ids=[WEB_CLIENT_ID
-                                   ],
+               allowed_client_ids=[WEB_CLIENT_ID],
                audiences=[WEB_CLIENT_ID])
 class HelloWorldApi(remote.Service):
     """Helloworld API v1."""
