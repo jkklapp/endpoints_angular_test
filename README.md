@@ -8,3 +8,7 @@ Just a test app that reads and writes from an AngularJS frontend to a Google Clo
 - the	API	requiring	an authenticated user	using JWT (use the Authorization request header	with	the	Bearer authentication scheme). When clicking 'Greet as John' the frontend sends a predefined JWT authenticating the user.
 
 - a	web	based	frontend demonstrating	the	API in AngularJS.
+
+## Live
+
+This project is running [here](https://annular-beacon-110911.appspot.com).
