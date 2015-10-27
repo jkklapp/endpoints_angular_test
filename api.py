@@ -20,10 +20,13 @@ from models import GreetingModel
 # Console or Cloud Console.
 WEB_CLIENT_ID = 'secret'
 package = 'Hello'
+DATE_FORMAT="%a %b %d %H:%M:%S %Y"
 
 class Greeting(messages.Message):
     """Greeting that stores a message."""
-    message = messages.StringField(1)
+    text = messages.StringField(1)
+    author = messages.StringField(2)
+    date = messages.StringField(3)
 
 class GreetingCollection(messages.Message):
     """Collection of Greetings."""
@@ -43,7 +46,8 @@ class HelloWorldApi(remote.Service):
                       path='hellogreeting', http_method='GET',
                       name='greetings.listGreeting')
     def greetings_list(self, unused_request):
-        messages = [Greeting(message=m.message) for m in GreetingModel.all()]
+        messages = [Greeting(text=m.text, date=m.date.strftime(DATE_FORMAT), author=m.author)
+                    for m in GreetingModel.all()]
         greetings = GreetingCollection(items=messages)
         return greetings
 
@@ -57,7 +61,7 @@ class HelloWorldApi(remote.Service):
     def greeting_get(self, request):
         try:
             greeting_model = GreetingModel.get_by_id(request.id)
-            return Greeting(message=greeting_model.message)
+            return Greeting(text=greeting_model.text, date=m.date, author=m.author)
         except (IndexError, TypeError):
             raise endpoints.NotFoundException('Greeting %s not found.' %
                                               (request.id,))
@@ -79,10 +83,9 @@ class HelloWorldApi(remote.Service):
             encoded_payload = json.loads(base64.b64decode(auth_token[1]))
             message = encoded_payload["message"]
             name = encoded_payload["name"]
-            date = datetime.datetime.now().strftime("%a %b %d %H:%M:%S %Y")
-            new_greeting = GreetingModel(message='"%s" - %s @ %s' % (name, message, date))
+            new_greeting = GreetingModel(text=message, author=name)
         new_greeting.put()
-        greeting_message = Greeting(message=new_greeting.message)
+        greeting_message = Greeting(text=new_greeting.text, date=new_greeting.date.strftime(DATE_FORMAT), author=new_greeting.author)
         return greeting_message
 
 

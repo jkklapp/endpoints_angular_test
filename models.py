@@ -4,7 +4,9 @@ from google.appengine.ext import ndb
 
 class GreetingModel(ndb.Model):
     """Greeting that stores a message."""
-    message = ndb.StringProperty(default="Hi")
+    text = ndb.StringProperty(default="Hi")
+    author = ndb.StringProperty(default="Anon", required=True)
+    date = ndb.DateTimeProperty(auto_now_add=True)
 
     @classmethod
     def get_by_id(cls, key):

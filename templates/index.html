@@ -18,7 +18,19 @@
       <span class="instructions">Enter a greeting and your name.</span>
       <ul class="unstyled greetings">
         <li ng-repeat="greeting in greetingsCtrl.greetings">
-          <div>{{greeting.message}}</div>
+          <div class="message">
+            <div class="message-text">
+              {{greeting.text}}
+            </div>
+            <div class="message-meta"> - 
+              <span class="author">
+                {{greeting.author}}
+              </span> @ 
+              <span class="date">
+                {{greeting.date}}
+              </span>
+            </div>
+          </div>
         </li>
       </ul>
       <form name="form" novalidate>
