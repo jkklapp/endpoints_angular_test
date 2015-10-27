@@ -12,6 +12,7 @@ from protorpc import remote
 import logging
 import base64
 import json
+import datetime
 
 from models import GreetingModel
 
@@ -78,7 +79,8 @@ class HelloWorldApi(remote.Service):
             encoded_payload = json.loads(base64.b64decode(auth_token[1]))
             message = encoded_payload["message"]
             name = encoded_payload["name"]
-            new_greeting = GreetingModel(message='hello %s, you wrote "%s"!' % (name, message))
+            date = datetime.datetime.now().strftime("%a %b %d %H:%M:%S %Y")
+            new_greeting = GreetingModel(message='"%s" - %s @ %s' % (name, message, date))
         new_greeting.put()
         greeting_message = Greeting(message=new_greeting.message)
         return greeting_message
