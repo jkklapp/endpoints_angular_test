@@ -11,4 +11,4 @@ Just a test app that reads and writes from an AngularJS frontend to a Google Clo
 
 ## Live
 
-This project is running [here](https://annular-beacon-110911.appspot.com).
+This project is running [here](https://annular-beacon-110911.appspot.com). It is effectively a guest book.
